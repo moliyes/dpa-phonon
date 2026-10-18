@@ -145,8 +145,9 @@ methods:
 
 - `model` accepts `builtin:dpa4` or a DeepMD ASE-loadable `.pt2`, `.pt`, `.pth`,
   or `.pb` file.
-- `builtin:dpa4` resolves from installed package data and its checksum, not from
-  the case directory. It is a frozen GPU `.pt2` artifact.
+- `builtin:dpa4` is not relative to the case directory. It prefers the
+  machine-local `.pt2` created by `ph model freeze` and otherwise resolves to
+  the installed `dpa4_0704.pt` checkpoint.
 - `device` defaults to `cuda:0`; supported syntax is `cpu` or `cuda:N`, subject to
   the model/runtime actually supporting it.
 - A `.pt2` head is frozen: omit `head` or set it to `null`. A checkpoint format

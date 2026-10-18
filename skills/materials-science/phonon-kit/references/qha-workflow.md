@@ -143,7 +143,8 @@ differently sized primitive cells without applying their formula-unit counts.
 ## DeepMD and VASP stages
 
 DeepMD fields match the ordinary workflow: model, device, optional supported head,
-and enabled flag. `builtin:dpa4` is GPU-only and cannot set a head. For every
+and enabled flag. `builtin:dpa4` prefers the machine-local model created by
+`ph model freeze` and otherwise falls back to the packaged `.pt`. For every
 method, phase, and volume, DeepMD performs fixed-volume relaxation, one static
 energy evaluation, every finite-displacement force evaluation, and QHA analysis.
 Checkpointing skips completed volumes and displacement forces on resume.

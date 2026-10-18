@@ -10,29 +10,43 @@
 
 ## 1. 安装
 
-当前机器推荐直接复用 DeepMD 环境：
+要求 Python 3.11 或更新版本。当前通过公开 GitHub 仓库安装指定版本：
 
 ```bash
-cd /home/begin/phonon-kit
-./install.sh --with-test
+python -m pip install "phonon-kit @ git+https://github.com/moliyes/phonon-kit.git@v0.4.0"
 ph --version
 ```
 
-安装器优先选择当前可导入 DeepMD 的 Python，然后尝试
-`/opt/deepmd-kit/.venv/bin/python`。也可明确指定：
+该方式需要 Git；尚未发布到 PyPI。`pip` 会在当前 Python 环境中生成 `ph`
+命令，无需安装脚本、sudo 或手工创建全局启动器。使用前激活对应环境；也可用
+`python -m phonon_kit.cli --version` 确认正在调用该环境中的版本。
+
+本地开发安装：
 
 ```bash
-./install.sh --python /path/to/deepmd/python
+git clone https://github.com/moliyes/phonon-kit.git
+cd phonon-kit
+python -m pip install -e ".[test]"
+python -m pytest -m "not gpu and not integration"
 ```
 
-DeepMD 和 Torch 不会被安装器升级，避免破坏已经可用的 GPU 环境。Phonopy、
-Phono3py、ASE、SeeK-path、spglib、Matplotlib 和 DPDispatcher 会作为 Python 依赖安装。
+需要 DeepMD 推理时，请在已经配置好兼容 DeepMD、Torch 和所需计算设备的环境中
+安装本工具。它们不作为本包的自动安装依赖；VASP 及其授权和 POTCAR 也需自行准备。
+Phonopy、Phono3py、ASE、SeeK-path、spglib、Matplotlib 和 DPDispatcher
+会作为 Python 依赖安装。安装成功不代表 GPU 推理或远程 VASP 环境已就绪。
 `requirements-verified.txt` 记录了本机完整验收时使用的依赖版本；它不负责安装
 DeepMD/Torch。
 
-内置 `models/dpa4_omat_neo704.pt2` 是 GPU 冻结模型。它不能在 CPU 上运行，也
-不能设置 `head`。迁移到新机器后先执行 `ph validate`，以检查 CUDA、Torch、
-DeepMD 和冻结模型是否匹配。
+包内只携带可重新冻结的 DPA4 checkpoint `dpa4_0704.pt`，不再分发机器相关的
+`.pt2`。安装后建议在实际计算使用的 DeepMD 环境中运行：
+
+```bash
+ph model freeze
+```
+
+它会把本机冻结结果写入 `~/.cache/phonon-kit/models/dpa4_0704.pt2`。
+`builtin:dpa4` 会优先使用这个 `.pt2`；若尚未冻结，则自动回退到包内 `.pt`。
+迁移到另一台机器后应重新执行冻结与 `ph validate`。
 
 ## 2. 最快用法
 
@@ -336,9 +350,10 @@ q 网格都必须做收敛检查。完整字段见
 
 ## 9. 常见问题
 
-`ph validate` 提示 `.pt2` 无法加载：该冻结模型依赖 GPU、Torch/DeepMD 构建和
-CUDA。先检查 `nvidia-smi`，并确保命令使用正确的 DeepMD Python。也可换用该
-环境可加载的 `.pt/.pth/.pb`。
+`ph validate` 提示 `.pt2` 无法加载：冻结模型依赖生成它的 GPU、Torch/DeepMD
+构建和 CUDA。删除或移走 `~/.cache/phonon-kit/models/dpa4_0704.pt2`，确认命令
+使用正确的 DeepMD Python，然后执行 `ph model freeze --force`。如果没有本机
+`.pt2`，`builtin:dpa4` 会回退到包内 `.pt`。
 
 VASP 一直显示 waiting：检查每个 `disp-xxxx/vasprun.xml` 是否完整，而不仅是
 OUTCAR 是否存在，然后执行 `ph resume` 或 `ph collect`。
@@ -384,3 +399,32 @@ hermes config get skills --json
 显式调用示例：`/phonon-kit 检查这个 QHA 运行的体积覆盖和虚频警告`。自然语言
 提及 Phonopy/Phono3py、DeepMD/VASP 声子、热导率、寿命、QHA 或 P–T 相图时也可自动触发。
 Skill 不会因状态检查而擅自执行 `run`、`resume`、DFT 提交或模型推理。
+
+## 11. 构建与发布
+
+在独立的 Python 3.11+ 环境中构建标准 wheel 和源码包：
+
+```bash
+python -m pip install build twine
+python -m build --outdir dist-release
+python -m twine check dist-release/phonon_kit-0.4.0*
+```
+
+发布前，在干净环境中安装 wheel，检查依赖与命令，再测试源码包安装：
+
+```bash
+python -m pip install dist-release/phonon_kit-0.4.0-py3-none-any.whl
+python -m pip check
+ph --version
+ph --help
+```
+
+PyPI 发布需要维护者自己的账号和发布授权。完成安装与模型验证后，在本机终端
+使用 Twine 上传本次版本的两个文件（API Token 仅在终端认证提示中输入）：
+
+```bash
+python -m twine upload dist-release/phonon_kit-0.4.0-py3-none-any.whl dist-release/phonon_kit-0.4.0.tar.gz
+```
+
+上传成功后，用户才可使用 `python -m pip install phonon-kit==0.4.0`。
+后续发布需更新版本号，并使用对应版本的文件名和 Git 标签。

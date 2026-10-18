@@ -48,6 +48,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--version", action="version", version=f"phonon-kit {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
+    model = sub.add_parser("model", help="管理本机 DeepMD 模型")
+    model_sub = model.add_subparsers(dest="model_command", required=True)
+    model_freeze = model_sub.add_parser("freeze", help="在当前 DeepMD 环境冻结内置 DPA4")
+    model_freeze.add_argument("--source", type=Path, help="可选的 .pt checkpoint；默认使用包内 DPA4")
+    model_freeze.add_argument("--head", help="多任务 checkpoint 的可选 head")
+    model_freeze.add_argument("--force", action="store_true", help="覆盖已有的本机冻结模型")
+
     init = sub.add_parser("init", help="创建一个清晰的声子计算案例")
     init.add_argument("target", type=Path)
 
@@ -118,6 +125,17 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        if args.command == "model":
+            from .model_manager import builtin_model_path, freeze_builtin_model, packaged_checkpoint_path
+
+            if args.model_command == "freeze":
+                source = args.source or packaged_checkpoint_path()
+                print(f"正在使用当前 DeepMD 环境冻结: {source}")
+                frozen = freeze_builtin_model(source, force=args.force, head=args.head)
+                print(f"本机冻结模型已生成: {frozen}")
+                print(f"builtin:dpa4 现在解析为: {builtin_model_path()}")
+                return 0
+            raise AssertionError(args.model_command)
         if args.command == "anh":
             from .anh_config import load_anh_config
             from .anh_initializer import init_anh_case

@@ -1,4 +1,8 @@
-include README.md LICENSE THIRD_PARTY_NOTICES.md
-recursive-include models *.pt2 *.sha256 *.md
+include README.md LICENSE THIRD_PARTY_NOTICES.md requirements-verified.txt
+recursive-include models *.md
+recursive-include src/phonon_kit/data/models *.pt *.sha256
 recursive-include examples *
 recursive-include docs *.md
+recursive-include skills *.md *.yaml
+recursive-include tests *.py
+global-exclude *.pt2 *.pt2.sha256

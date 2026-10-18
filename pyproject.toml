@@ -1,14 +1,15 @@
 [build-system]
-requires = ["setuptools>=75", "wheel"]
+requires = ["setuptools>=77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "phonon-kit"
-version = "0.3.0"
+version = "0.4.0"
 description = "Resumable Phonopy, Phono3py, and multiphase QHA workflows"
 readme = "README.md"
 requires-python = ">=3.11"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
 authors = [{name = "phonon-kit contributors"}]
 dependencies = [
   "ase>=3.26",
@@ -18,10 +19,16 @@ dependencies = [
   "numpy>=1.26",
   "phonopy==4.4.0",
   "phono3py==4.4.0",
+  # Phonopy 4.4 uses Rust APIs removed in newer phonors releases.
+  "phonors==0.3.0",
   "PyYAML>=6",
   "seekpath>=2.1",
   "spglib>=2.4",
 ]
+
+[project.urls]
+Repository = "https://github.com/moliyes/phonon-kit"
+Issues = "https://github.com/moliyes/phonon-kit/issues"
 
 [project.optional-dependencies]
 test = ["pytest>=8", "pytest-timeout>=2"]
@@ -36,7 +43,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-phonon_kit = ["data/models/*.pt2", "data/models/*.sha256"]
+phonon_kit = ["data/models/dpa4_0704.pt", "data/models/dpa4_0704.pt.sha256"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"

@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 
 import yaml
+from phonon_kit import __version__
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -29,7 +30,7 @@ def test_hermes_frontmatter_and_trigger_description() -> None:
     frontmatter, body = _load_skill()
 
     assert frontmatter["name"] == "phonon-kit"
-    assert frontmatter["version"] == "0.2.0"
+    assert frontmatter["version"] == __version__
     assert frontmatter["platforms"] == ["linux"]
     assert frontmatter["author"] == "moliyes, Hermes Agent"
     assert body
@@ -88,6 +89,7 @@ def test_skill_only_documents_real_ph_commands() -> None:
         "plot",
         "qha",
         "anh",
+        "model",
     }
     assert qha_subcommands <= {
         "init",

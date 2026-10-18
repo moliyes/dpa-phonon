@@ -5,6 +5,7 @@ __pycache__/
 .phonon-kit/
 build/
 dist/
+dist-release/
 *.egg-info/
 **/runs/
 **/inputs/models/*

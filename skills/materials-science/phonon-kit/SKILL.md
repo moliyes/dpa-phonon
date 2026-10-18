@@ -1,7 +1,7 @@
 ---
 name: phonon-kit
 description: Phonopy/Phono3py DeepMD/VASP phonons, QHA, phase maps.
-version: 0.2.0
+version: 0.4.0
 author: moliyes, Hermes Agent
 license: MIT
 platforms: [linux]
@@ -42,18 +42,20 @@ with significant imaginary modes or inadequate volume coverage remains diagnosti
 
 ## Prerequisites
 
-1. Read the injected `phonon_kit.project_root` Skill setting. If it is absent or
-   invalid, use `search_files(target='files')` to locate a checkout whose
-   `pyproject.toml` names `phonon-kit`; ask the user if multiple checkouts match.
-2. Check the CLI with
+1. Check the CLI with
    `terminal(command="command -v ph && ph --version")`. Do not assume the active
    shell's `python` owns `ph`; its launcher must use an environment compatible
    with DeepMD when a DeepMD method is requested.
-3. If `ph` is absent, read `install.sh` and the project README. Install or repair
-   it only after the user explicitly asks.
-4. Require Phono3py 4.4 for `ph anh`. Require a compatible NVIDIA runtime for
-   `builtin:dpa4`; the bundled frozen
-   `.pt2` model is GPU-only. VASP workflows additionally require valid templates,
+2. If installation is authorized, use Python 3.11+ and
+   `python -m pip install "phonon-kit @ git+https://github.com/moliyes/phonon-kit.git@v0.4.0"`.
+   A source checkout and custom launcher are unnecessary. DeepMD and Torch must
+   already be available when DeepMD calculations are requested.
+3. For source development only, use the optional `phonon_kit.project_root`
+   setting and `python -m pip install -e "/path/to/phonon-kit[test]"`.
+4. Require Phono3py 4.4 for `ph anh`. Before expensive `builtin:dpa4` work,
+   run `ph model freeze` in the user's DeepMD environment and validate real
+   inference. The package contains a `.pt` checkpoint, while a machine-local
+   `.pt2` cache is preferred when present. VASP workflows additionally require valid templates,
    POTCAR, DPDispatcher configuration, credentials, and a working remote executor.
 
 ## How to Run
@@ -189,8 +191,9 @@ Load references only when needed:
 
 ## Pitfalls
 
-- `builtin:dpa4` resolves from package data; it is not relative to the case. It
-  cannot use CPU and cannot set a non-null `head`.
+- `builtin:dpa4` is not relative to the case. It prefers the machine-local
+  `~/.cache/phonon-kit/models/dpa4_0704.pt2` created by `ph model freeze` and
+  falls back to the packaged `dpa4_0704.pt` checkpoint.
 - `.pt2` has a frozen head. Other `.pt`, `.pth`, and `.pb` files may use `head`
   only when the model supports it; confirm by real inference.
 - The ordinary optional relaxation is shared by all selected force methods and

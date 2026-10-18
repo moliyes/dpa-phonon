@@ -1,6 +1,6 @@
 # `anh.yaml` 三阶声子配置说明
 
-本文对应 `phonon-kit 0.3.0`。三阶工作流只支持 DeepMD 力和 Phono3py 系统有限
+本文对应 `phonon-kit 0.4.0`。三阶工作流只支持 DeepMD 力和 Phono3py 系统有限
 位移；不负责结构弛豫、VASP、LBTE、同位素或边界散射。
 
 ## 完整示例

@@ -8,11 +8,11 @@ from typing import Any, Literal
 import yaml
 
 from .errors import ConfigError
+from .model_manager import builtin_model_path
 from .util import safe_name, sha256_file, sha256_json
 from .vasp_input import missing_vasp_template_inputs
 
 
-BUILTIN_MODEL_NAME = "dpa4_omat_neo704.pt2"
 SUPPORTED_MODEL_SUFFIXES = {".pt2", ".pt", ".pth", ".pb"}
 
 
@@ -178,18 +178,6 @@ class Config:
                         files[f"method:{name}:{label}"] = sha256_file(path)
         payload["input_sha256"] = files
         return sha256_json(payload)
-
-
-def project_root() -> Path:
-    return Path(__file__).resolve().parents[2]
-
-
-def builtin_model_path() -> Path:
-    source_model = project_root() / "models" / BUILTIN_MODEL_NAME
-    if source_model.is_file():
-        return source_model
-    packaged_model = Path(__file__).resolve().parent / "data" / "models" / BUILTIN_MODEL_NAME
-    return packaged_model
 
 
 def _mapping(value: Any, where: str) -> dict[str, Any]:
