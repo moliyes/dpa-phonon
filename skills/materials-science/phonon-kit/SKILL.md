@@ -47,7 +47,7 @@ with significant imaginary modes or inadequate volume coverage remains diagnosti
    shell's `python` owns `ph`; its launcher must use an environment compatible
    with DeepMD when a DeepMD method is requested.
 2. If installation is authorized, use Python 3.11+ and
-   `python -m pip install "dpa-phonon @ git+https://github.com/moliyes/phonon-kit.git@dpa-phonon-v0.4.0"`.
+   `python -m pip install dpa-phonon`.
    Uninstall the legacy `phonon-kit` distribution first if present; both share
    the `phonon_kit` import and `ph` command.
    A source checkout and custom launcher are unnecessary. DeepMD and Torch must

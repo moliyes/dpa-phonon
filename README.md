@@ -10,13 +10,13 @@
 
 ## 1. 安装
 
-要求 Python 3.11 或更新版本。发布到 PyPI 后可直接安装：
+要求 Python 3.11 或更新版本。通过 PyPI 安装：
 
 ```bash
 python -m pip install dpa-phonon
 ```
 
-发布前或需要固定 Git 版本时，可从公开仓库安装：
+需要固定 Git 版本时，也可从公开仓库安装：
 
 ```bash
 python -m pip install "dpa-phonon @ git+https://github.com/moliyes/phonon-kit.git@dpa-phonon-v0.4.0"
