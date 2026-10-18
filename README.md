@@ -19,7 +19,7 @@ python -m pip install dpa-phonon
 需要固定 Git 版本时，也可从公开仓库安装：
 
 ```bash
-python -m pip install "dpa-phonon @ git+https://github.com/moliyes/phonon-kit.git@dpa-phonon-v0.4.0"
+python -m pip install "dpa-phonon @ git+https://github.com/moliyes/dpa-phonon.git@dpa-phonon-v0.4.0"
 ph --version
 ```
 
@@ -27,15 +27,15 @@ GitHub 安装方式需要 Git。`pip` 会在当前 Python 环境中生成 `ph`
 命令，无需安装脚本、sudo 或手工创建全局启动器。使用前激活对应环境；也可用
 `python -m phonon_kit.cli --version` 确认正在调用该环境中的版本。
 
-发布包名为 `dpa-phonon`；GitHub 仓库、Python 导入名 `phonon_kit` 和现有数据路径
+发布包和 GitHub 仓库均名为 `dpa-phonon`；Python 导入名 `phonon_kit` 和现有数据路径
 保持不变。如果当前环境安装过旧包 `phonon-kit`，请先运行
 `python -m pip uninstall phonon-kit`，再安装新包，避免两者共用文件。
 
 本地开发安装：
 
 ```bash
-git clone https://github.com/moliyes/phonon-kit.git
-cd phonon-kit
+git clone https://github.com/moliyes/dpa-phonon.git
+cd dpa-phonon
 python -m pip install -e ".[test]"
 python -m pytest -m "not gpu and not integration"
 ```

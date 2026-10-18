@@ -27,8 +27,8 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/moliyes/phonon-kit"
-Issues = "https://github.com/moliyes/phonon-kit/issues"
+Repository = "https://github.com/moliyes/dpa-phonon"
+Issues = "https://github.com/moliyes/dpa-phonon/issues"
 
 [project.optional-dependencies]
 test = ["pytest>=8", "pytest-timeout>=2"]
