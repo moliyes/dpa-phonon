@@ -1,6 +1,6 @@
-# phonon-kit
+# dpa-phonon
 
-`phonon-kit` 是一个面向日常使用的有限位移声子、三阶非谐声子与准谐近似工作流。
+`dpa-phonon` 是一个以 DPA 系列模型为核心的有限位移声子、三阶非谐声子与准谐近似工作流。
 它用 YAML 管理结构、DPA3/DPA4、VASP/DFT、声子谱、振动热力学、RTA 晶格热
 导率、多相 QHA 和 P–T 相图，并把临时文件与最终结果严格分开。全局命令为 `ph`。
 
@@ -10,16 +10,26 @@
 
 ## 1. 安装
 
-要求 Python 3.11 或更新版本。当前通过公开 GitHub 仓库安装指定版本：
+要求 Python 3.11 或更新版本。发布到 PyPI 后可直接安装：
 
 ```bash
-python -m pip install "phonon-kit @ git+https://github.com/moliyes/phonon-kit.git@v0.4.0"
+python -m pip install dpa-phonon
+```
+
+发布前或需要固定 Git 版本时，可从公开仓库安装：
+
+```bash
+python -m pip install "dpa-phonon @ git+https://github.com/moliyes/phonon-kit.git@dpa-phonon-v0.4.0"
 ph --version
 ```
 
-该方式需要 Git；尚未发布到 PyPI。`pip` 会在当前 Python 环境中生成 `ph`
+GitHub 安装方式需要 Git。`pip` 会在当前 Python 环境中生成 `ph`
 命令，无需安装脚本、sudo 或手工创建全局启动器。使用前激活对应环境；也可用
 `python -m phonon_kit.cli --version` 确认正在调用该环境中的版本。
+
+发布包名为 `dpa-phonon`；GitHub 仓库、Python 导入名 `phonon_kit` 和现有数据路径
+保持不变。如果当前环境安装过旧包 `phonon-kit`，请先运行
+`python -m pip uninstall phonon-kit`，再安装新包，避免两者共用文件。
 
 本地开发安装：
 
@@ -407,13 +417,13 @@ Skill 不会因状态检查而擅自执行 `run`、`resume`、DFT 提交或模�
 ```bash
 python -m pip install build twine
 python -m build --outdir dist-release
-python -m twine check dist-release/phonon_kit-0.4.0*
+python -m twine check dist-release/dpa_phonon-0.4.0*
 ```
 
 发布前，在干净环境中安装 wheel，检查依赖与命令，再测试源码包安装：
 
 ```bash
-python -m pip install dist-release/phonon_kit-0.4.0-py3-none-any.whl
+python -m pip install dist-release/dpa_phonon-0.4.0-py3-none-any.whl
 python -m pip check
 ph --version
 ph --help
@@ -423,8 +433,8 @@ PyPI 发布需要维护者自己的账号和发布授权。完成安装与模型
 使用 Twine 上传本次版本的两个文件（API Token 仅在终端认证提示中输入）：
 
 ```bash
-python -m twine upload dist-release/phonon_kit-0.4.0-py3-none-any.whl dist-release/phonon_kit-0.4.0.tar.gz
+python -m twine upload dist-release/dpa_phonon-0.4.0-py3-none-any.whl dist-release/dpa_phonon-0.4.0.tar.gz
 ```
 
-上传成功后，用户才可使用 `python -m pip install phonon-kit==0.4.0`。
+上传成功后，用户才可使用 `python -m pip install dpa-phonon==0.4.0`。
 后续发布需更新版本号，并使用对应版本的文件名和 Git 标签。

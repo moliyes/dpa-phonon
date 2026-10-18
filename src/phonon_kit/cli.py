@@ -45,7 +45,7 @@ def _anh_run_target(target: Path):
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ph", description="DeepMD/VASP finite-displacement phonon workflow")
-    parser.add_argument("--version", action="version", version=f"phonon-kit {__version__}")
+    parser.add_argument("--version", action="version", version=f"dpa-phonon {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     model = sub.add_parser("model", help="管理本机 DeepMD 模型")
